@@ -114,7 +114,7 @@ test('languages', t => {
 
     t.equal(sitemaps['/sitemap.xml'], stripIndent`
       <?xml version="1.0" encoding="utf-8"?>
-      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
         <url>
           <loc>https://www.example.com/</loc>
           <lastmod>2000-01-01</lastmod>

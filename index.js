@@ -85,6 +85,7 @@ function buildSitemap (urls, base) {
   const sitemapObj = {
     urlset: {
       '@xmlns': 'http://www.sitemaps.org/schemas/sitemap/0.9',
+      '@xmlns:xhtml': urls.some(Array.isArray) ? 'http://www.w3.org/1999/xhtml' : undefined,
       url: urlObjs
     }
   }
