@@ -1,13 +1,19 @@
 # express-sitemap-xml [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![javascript style guide][standard-image]][standard-url]
 
-[travis-image]: https://img.shields.io/travis/feross/express-sitemap-xml/master.svg
-[travis-url]: https://travis-ci.org/feross/express-sitemap-xml
-[npm-image]: https://img.shields.io/npm/v/express-sitemap-xml.svg
-[npm-url]: https://npmjs.org/package/express-sitemap-xml
-[downloads-image]: https://img.shields.io/npm/dm/express-sitemap-xml.svg
-[downloads-url]: https://npmjs.org/package/express-sitemap-xml
+[travis-image]: https://travis-ci.org/lydell/express-sitemap-xml.svg?branch=languages
+[travis-url]: https://travis-ci.org/lydell/express-sitemap-xml
+[npm-image]: https://img.shields.io/npm/v/@lydell/express-sitemap-xml.svg
+[npm-url]: https://npmjs.org/package/@lydell/express-sitemap-xml
+[downloads-image]: https://img.shields.io/npm/dm/@lydell/express-sitemap-xml.svg
+[downloads-url]: https://npmjs.org/package/@lydell/express-sitemap-xml
 [standard-image]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
 [standard-url]: https://standardjs.com
+
+### Fork information
+
+- Correct Content-Type header (application/xml).
+- Support for [language links](#language-links).
+- Updated dependencies.
 
 ### Express middleware to serve [`sitemap.xml`](https://en.wikipedia.org/wiki/Sitemaps) from a list of URLs
 
@@ -25,7 +31,7 @@ it is served directly at `/sitemap.xml`. Otherwise, a sitemap index is served at
 ## Install
 
 ```
-npm install express-sitemap-xml
+npm install @lydell/express-sitemap-xml
 ```
 
 ## Demo
@@ -39,7 +45,7 @@ The easiest way to use this package is with the Express middleware.
 
 ```js
 const express = require('express')
-const expressSitemapXml = require('express-sitemap-xml')
+const expressSitemapXml = require('@lydell/express-sitemap-xml')
 
 const app = express()
 
@@ -61,7 +67,7 @@ Sitemap: https://bitmidi.com/sitemap.xml
 The package can also be used without the Express middleware.
 
 ```js
-const { buildSitemaps } = require('express-sitemap-xml')
+const { buildSitemaps } = require('@lydell/express-sitemap-xml')
 
 async function run () {
   const urls = ['/1', '/2', '/3']
@@ -236,4 +242,4 @@ Or if multiple sitemaps are needed, then the return object looks like this:
 
 ## License
 
-MIT. Copyright (c) [Feross Aboukhadijeh](https://feross.org).
+MIT. Copyright (c) [Feross Aboukhadijeh](https://feross.org) and Simon Lydell.

@@ -1,5 +1,5 @@
 {
-  "name": "express-sitemap-xml",
+  "name": "@lydell/express-sitemap-xml",
   "description": "Express middleware to serve `sitemap.xml` from a list of URLs",
   "version": "1.0.2",
   "author": {
@@ -7,9 +7,10 @@
     "email": "feross@feross.org",
     "url": "https://feross.org"
   },
-  "bugs": {
-    "url": "https://github.com/feross/express-sitemap-xml/issues"
-  },
+  "contributors": [
+    "Simon Lydell"
+  ],
+  "repository": "lydell/express-sitemap-xml",
   "dependencies": {
     "mem": "^4.2.0",
     "xmlbuilder": "^11.0.0"
@@ -19,7 +20,6 @@
     "standard": "*",
     "tape": "^4.10.1"
   },
-  "homepage": "https://github.com/feross/express-sitemap-xml",
   "keywords": [
     "express",
     "google",
@@ -36,10 +36,6 @@
   ],
   "license": "MIT",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/feross/express-sitemap-xml.git"
-  },
   "scripts": {
     "test": "standard && tape test/**/*.js"
   }
