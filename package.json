@@ -11,13 +11,13 @@
     "url": "https://github.com/feross/express-sitemap-xml/issues"
   },
   "dependencies": {
-    "mem": "^3.0.1",
-    "xmlbuilder": "^10.0.0"
+    "mem": "^4.2.0",
+    "xmlbuilder": "^11.0.0"
   },
   "devDependencies": {
     "common-tags": "^1.8.0",
     "standard": "*",
-    "tape": "^4.9.1"
+    "tape": "^4.10.1"
   },
   "homepage": "https://github.com/feross/express-sitemap-xml",
   "keywords": [
