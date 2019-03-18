@@ -76,6 +76,78 @@ test('usage with all options', t => {
   })
 })
 
+test('languages', t => {
+  t.plan(2)
+
+  // Example based on https://support.google.com/webmasters/answer/189077?hl=en#sitemap (as of 2019-03-18).
+  const urls = [
+    {
+      url: '/',
+      lastMod: '2000-01-01',
+      changeFreq: 'daily'
+    },
+    [
+      {
+        language: 'en',
+        url: '/english/page.html'
+      },
+      {
+        language: 'de',
+        url: {
+          url: '/deutsch/page.html',
+          lastMod: new Date('2000-02-02'),
+          changeFreq: 'weekly'
+        }
+      },
+      {
+        language: 'de-ch',
+        url: {
+          url: '/schweiz-deutsch/page.html',
+          changeFreq: 'daily'
+        }
+      }
+    ]
+  ]
+
+  buildSitemaps(urls, 'https://www.example.com').then(sitemaps => {
+    t.deepEqual(new Set(Object.keys(sitemaps)), new Set(['/sitemap.xml']))
+
+    t.equal(sitemaps['/sitemap.xml'], stripIndent`
+      <?xml version="1.0" encoding="utf-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+          <loc>https://www.example.com/</loc>
+          <lastmod>2000-01-01</lastmod>
+          <changefreq>daily</changefreq>
+        </url>
+        <url>
+          <loc>https://www.example.com/english/page.html</loc>
+          <lastmod>${getTodayStr()}</lastmod>
+          <xhtml:link rel="alternate" hreflang="en" href="https://www.example.com/english/page.html"/>
+          <xhtml:link rel="alternate" hreflang="de" href="https://www.example.com/deutsch/page.html"/>
+          <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.example.com/schweiz-deutsch/page.html"/>
+        </url>
+        <url>
+          <loc>https://www.example.com/deutsch/page.html</loc>
+          <lastmod>2000-02-02</lastmod>
+          <changefreq>weekly</changefreq>
+          <xhtml:link rel="alternate" hreflang="en" href="https://www.example.com/english/page.html"/>
+          <xhtml:link rel="alternate" hreflang="de" href="https://www.example.com/deutsch/page.html"/>
+          <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.example.com/schweiz-deutsch/page.html"/>
+        </url>
+        <url>
+          <loc>https://www.example.com/schweiz-deutsch/page.html</loc>
+          <lastmod>${getTodayStr()}</lastmod>
+          <changefreq>daily</changefreq>
+          <xhtml:link rel="alternate" hreflang="en" href="https://www.example.com/english/page.html"/>
+          <xhtml:link rel="alternate" hreflang="de" href="https://www.example.com/deutsch/page.html"/>
+          <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.example.com/schweiz-deutsch/page.html"/>
+        </url>
+      </urlset>
+    `)
+  })
+})
+
 test('large test: use sitemap index for > 50,000 urls', t => {
   t.plan(4)
 

@@ -80,29 +80,7 @@ function buildSitemapIndex (sitemaps, base) {
 }
 
 function buildSitemap (urls, base) {
-  const urlObjs = urls.map(url => {
-    if (typeof url === 'string') {
-      return {
-        loc: toAbsolute(url, base),
-        lastmod: getTodayStr()
-      }
-    }
-
-    if (typeof url.url !== 'string') {
-      throw new Error(
-        `Invalid sitemap url object, missing 'url' property: ${JSON.stringify(url)}`
-      )
-    }
-
-    const urlObj = {
-      loc: toAbsolute(url.url, base),
-      lastmod: (url.lastMod && dateToString(url.lastMod)) || getTodayStr()
-    }
-    if (typeof url.changeFreq === 'string') {
-      urlObj.changefreq = url.changeFreq
-    }
-    return urlObj
-  })
+  const urlObjs = [].concat(...urls.map(url => makeUrlObjs(url, base, true)))
 
   const sitemapObj = {
     urlset: {
@@ -112,6 +90,62 @@ function buildSitemap (urls, base) {
   }
 
   return buildXml(sitemapObj)
+}
+
+function makeUrlObjs (url, base, allowArray) {
+  if (typeof url === 'string') {
+    return {
+      loc: toAbsolute(url, base),
+      lastmod: getTodayStr()
+    }
+  }
+
+  if (allowArray && Array.isArray(url)) {
+    const items = url.map(item => {
+      if (typeof item.language !== 'string') {
+        throw new Error(
+          `Invalid sitemap url array object, missing 'language' property: ${JSON.stringify(item)}`
+        )
+      }
+
+      if (item.url == null) {
+        throw new Error(
+          `Invalid sitemap url array object, missing 'url' property: ${JSON.stringify(item)}`
+        )
+      }
+
+      return {
+        language: item.language,
+        url: makeUrlObjs(item.url, base, false)
+      }
+    })
+
+    const links = items.map(item => ({
+      '@rel': 'alternate',
+      '@hreflang': item.language,
+      '@href': item.url.loc
+    }))
+
+    return items.map(item => ({
+      ...item.url,
+      'xhtml:link': links
+    }))
+  }
+
+  if (typeof url.url !== 'string') {
+    throw new Error(
+      `Invalid sitemap url object, missing 'url' property: ${JSON.stringify(url)}`
+    )
+  }
+
+  const urlObj = {
+    loc: toAbsolute(url.url, base),
+    lastmod: (url.lastMod && dateToString(url.lastMod)) || getTodayStr()
+  }
+  if (typeof url.changeFreq === 'string') {
+    urlObj.changefreq = url.changeFreq
+  }
+  return urlObj
 }
 
 function buildXml (obj) {

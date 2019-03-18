@@ -116,6 +116,9 @@ options about the URL:
 
 For more information about these options, see the [sitemap spec](https://www.sitemaps.org/protocol.html). Note that the `priority` option is not supported because [Google ignores it](https://twitter.com/methode/status/846796737750712320).
 
+You can also pass each item as an _array_ to create [language
+links](#language-links).
+
 The `getUrls` function is called at most once per 24 hours. The resulting
 sitemap(s) are cached to make repeated HTTP requests faster.
 
@@ -123,6 +126,83 @@ The `base` argument specifies the base URL to be used in case any URLs are
 specified as relative URLs. The argument is also used if a sitemap index needs
 to be generated and sitemap locations need to be specified, e.g.
 `${base}/sitemap-0.xml` becomes `https://bitmidi.com/sitemap-0.xml`.
+
+#### Language links
+
+In order to [tell Google about localized versions of your
+page](https://support.google.com/webmasters/answer/189077?hl=en#sitemap), use
+arrays of language-url pairs:
+
+```js
+[
+  {
+    url: '/',
+    lastMod: '2000-01-01',
+    changeFreq: 'daily'
+  },
+  [
+    {
+      language: 'en',
+      url: '/english/page.html'
+    },
+    {
+      language: 'de',
+      url: {
+        url: '/deutsch/page.html',
+        lastMod: new Date('2000-02-02'),
+        changeFreq: 'weekly'
+      }
+    },
+    {
+      language: 'de-ch',
+      url: {
+        url: '/schweiz-deutsch/page.html',
+        changeFreq: 'daily'
+      }
+    }
+  ]
+]
+```
+
+<details>
+
+<summary>Result</summary>
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.example.com/</loc>
+    <lastmod>2000-01-01</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://www.example.com/english/page.html</loc>
+    <lastmod>${getTodayStr()}</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.example.com/english/page.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.example.com/deutsch/page.html"/>
+    <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.example.com/schweiz-deutsch/page.html"/>
+  </url>
+  <url>
+    <loc>https://www.example.com/deutsch/page.html</loc>
+    <lastmod>2000-02-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.example.com/english/page.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.example.com/deutsch/page.html"/>
+    <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.example.com/schweiz-deutsch/page.html"/>
+  </url>
+  <url>
+    <loc>https://www.example.com/schweiz-deutsch/page.html</loc>
+    <lastmod>${getTodayStr()}</lastmod>
+    <changefreq>daily</changefreq>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.example.com/english/page.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.example.com/deutsch/page.html"/>
+    <xhtml:link rel="alternate" hreflang="de-ch" href="https://www.example.com/schweiz-deutsch/page.html"/>
+  </url>
+</urlset>
+```
+
+</details>
 
 ### `sitemaps = expressSitemapXml.buildSitemaps(urls, base)`
 
